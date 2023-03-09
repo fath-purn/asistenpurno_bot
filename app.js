@@ -7,7 +7,7 @@ const { Telegraf } = require('telegraf');
 const cors = require('cors');
 const { FieldValue } = require('@google-cloud/firestore');
 const Note = require('./config');
-// const { Bot, webhookCallback } = require('grammy');
+const { Bot, webhookCallback } = require('grammy');
 
 const { TELEGRAM_TOKEN, SERVER_URL, API_WIKI, API_CUACA } = process.env;
 const TELEGRAM_API = `https://api.telegram.org/bot${TELEGRAM_TOKEN}`;
