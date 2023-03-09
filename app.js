@@ -31,7 +31,6 @@ const init = async () => {
 const bot = new Telegraf(TELEGRAM_TOKEN); // asistenpurno_bot
 
 bot.start((ctx) => ctx.reply('Assalamualaikum, saya asisten purno, silahkan ketik /help untuk melihat perintah yang tersedia'));
-ctx.telegram.deleteWebhook;
 
 
 bot.command('help', (ctx) => {
