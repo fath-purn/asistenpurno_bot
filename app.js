@@ -31,6 +31,8 @@ const init = async () => {
 const bot = new Telegraf(TELEGRAM_TOKEN); // asistenpurno_bot
 
 bot.start((ctx) => ctx.reply('Assalamualaikum, saya asisten purno, silahkan ketik /help untuk melihat perintah yang tersedia'));
+ctx.telegram.deleteWebhook;
+
 
 bot.command('help', (ctx) => {
     ctx.replyWithHTML(`<b>Perintah yang tersedia:</b> 
@@ -129,6 +131,7 @@ bot.command('note', async (ctx) => {
     await Note.add(notes);
 
     ctx.reply(`Note berhasil disimpan`)
+    ctx.telegram.deleteWebhook;
 });
 
 bot.command('lihat', async (ctx) => {
@@ -204,6 +207,7 @@ bot.command('hapus', async (ctx) => {
 
 // Start the server
 if (process.env.NODE_ENV === "production") {
+    ctx.telegram.deleteWebhook;
     // Use Webhooks for the production server
     const app = express();
     app.use(express.json());
@@ -221,6 +225,11 @@ if (process.env.NODE_ENV === "production") {
 
 
 
+
+// export TELEGRAM_API_TOKEN=2130991418:AAGM6JiUtzppbqQrXFWYjTju30TjYYbT4YI
+// export TELEGRAM_WEBHOOK_URL=https://puzzled-tick-top-hat.cyclic.app
+
+// curl "https://api.telegram.org/bot$TELEGRAM_API_TOKEN/setWebhook?url=$TELEGRAM_WEBHOOK_URL"
 
 // app.listen(process.env.PORT || 6000, async () => {
 //     bot.launch(console.log());
