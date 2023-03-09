@@ -206,7 +206,6 @@ bot.command('hapus', async (ctx) => {
 
 // Start the server
 if (process.env.NODE_ENV === "production") {
-    ctx.telegram.deleteWebhook;
     // Use Webhooks for the production server
     const app = express();
     app.use(express.json());
