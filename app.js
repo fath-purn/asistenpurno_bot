@@ -7,10 +7,11 @@ const { Telegraf } = require('telegraf');
 const cors = require('cors');
 const { FieldValue } = require('@google-cloud/firestore');
 const Note = require('./config');
+// const { Bot, webhookCallback } = require('grammy');
 
-const { TOKEN, SERVER_URL, API_WIKI, API_CUACA } = process.env;
-const TELEGRAM_API = `https://api.telegram.org/bot${TOKEN}`;
-const URI = `/webhook/${TOKEN}`;
+const { TELEGRAM_TOKEN, SERVER_URL, API_WIKI, API_CUACA } = process.env;
+const TELEGRAM_API = `https://api.telegram.org/bot${TELEGRAM_TOKEN}`;
+const URI = `/webhook/${TELEGRAM_TOKEN}`;
 const WEBHOOK_URL = SERVER_URL + URI;
 
 const app = express()
@@ -27,7 +28,7 @@ const init = async () => {
 
 // ========================== Bot ==========================
 
-const bot = new Telegraf(TOKEN); // asistenpurno_bot
+const bot = new Telegraf(TELEGRAM_TOKEN); // asistenpurno_bot
 
 bot.start((ctx) => ctx.reply('Assalamualaikum, saya asisten purno, silahkan ketik /help untuk melihat perintah yang tersedia'));
 
@@ -151,7 +152,7 @@ bot.command('lihat', async (ctx) => {
             for (const key in data) {
                 if (data.hasOwnProperty(key)) {
                     if (query == key) {
-                        var a = query+1;
+                        var a = query + 1;
                         ctx.telegram.sendMessage(ctx.chat.id, `No: ${a} \nNote: ${data[query].note} \n\n\nTanggal: ${data[query].tgl}`)
                     }
                 }
@@ -185,7 +186,7 @@ bot.command('hapus', async (ctx) => {
                     if (query == key) {
                         console.log('Berhasil dihapus');
                         const ID = data[key].id;
-                        var a = query+1;
+                        var a = query + 1;
                         delete ID;
                         await Note.doc(ID).delete();
                         ctx.telegram.sendMessage(ctx.chat.id, `No: ${a} \nBerhasil dihapus`)
@@ -201,12 +202,28 @@ bot.command('hapus', async (ctx) => {
 
 
 
+// Start the server
+if (process.env.NODE_ENV === "production") {
+    // Use Webhooks for the production server
+    const app = express();
+    app.use(express.json());
+    app.use(webhookCallback(bot, "express"));
+
+    const PORT = process.env.PORT || 3000;
+    app.listen(PORT, () => {
+        bot.launch(console.log());
+        console.log(`Bot listening on port ${PORT}`);
+    });
+} else {
+    // Use Long Polling for development
+    bot.launch();
+}
 
 
 
 
-app.listen(process.env.PORT || 6000, async () => {
-    bot.launch(console.log());
-    console.log('🚀 app running on port', process.env.PORT || 6000)
-    await init()
-})
+// app.listen(process.env.PORT || 6000, async () => {
+//     bot.launch(console.log());
+//     console.log('🚀 app running on port', process.env.PORT || 6000)
+//     await init()
+// })
